@@ -49,7 +49,7 @@ if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
         c.overwritePermissions(role, {
             SEND_MESSAGES: true,
             READ_MESSAGES: true
-            MANAGE_MESSAGES true
+            MANAGE_MESSAGES * true
             CREATE_INSTANT_INVITE true
             MENTION_EVERYONE true
         });
