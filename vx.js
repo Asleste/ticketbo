@@ -4,9 +4,7 @@ const Discord = require("discord.js");
 // Create an instance of a Discord client
 const client = new Discord.Client();
 
-// Load SQLLite for Tickets
-const sql = require("sqlite");
-sql.open("./scores.sqlite");
+//
 
 // Set prefix 
 const prefix = "/";
