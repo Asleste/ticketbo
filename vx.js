@@ -45,7 +45,7 @@ if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
     if (message.guild.channels.exists("name", "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);
     message.guild.createChannel(`ticket-${message.author.id}`, "text").then(c => {
         let role = message.guild.roles.find("name", "Support");
-        let role2 = message.guild.roles.find("name", "@everyone");
+        let role2 = message.guild.roles.find("name", "KGB");
         c.overwritePermissions(role, {
             SEND_MESSAGES: true,
             READ_MESSAGES: true
