@@ -52,9 +52,11 @@ client.on("message", (message) => {
 if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
     const reason = message.content.split(" ").slice(1).join(" ");
     if (!message.guild.roles.exists("name", "Support")) return message.channel.send(`This server doesn't have a \`Support\` role made, so the ticket won't be opened.\nIf you are an administrator, make one with that name exactly and give it to users that should be able to see tickets.`);
-    if (message.guild.channels.exists("name", "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);
-    guild.createChannel(`ticket-${message.author.id}`, "text").then(channel => channel.setParent(Chats));   
+    if (message.guild.channels.exists("name", "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);  
+    guild.createChannel('name')
+  .then(channel => channel.setParent(Ticket));
     message.guild.createChannel(`ticket-${message.author.id}`, "text").then(c => { 
+
         let role = message.guild.roles.find("name", "Support");
         let role2 = message.guild.roles.find("name", "@everyone");
         c.overwritePermissions(role, {
