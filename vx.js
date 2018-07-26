@@ -45,10 +45,13 @@ if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
     if (message.guild.channels.exists("name", "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);
     message.guild.createChannel(`ticket-${message.author.id}`, "text").then(c => {
         let role = message.guild.roles.find("name", "Support");
-        let role2 = message.guild.roles.find("name", "@KGB");
+        let role2 = message.guild.roles.find("name", "@everyone");
         c.overwritePermissions(role, {
             SEND_MESSAGES: true,
             READ_MESSAGES: true
+            MANAGE_MESSAGES true
+            CREATE_INSTANT_INVITE true
+            MENTION_EVERYONE true
         });
         c.overwritePermissions(role2, {
             SEND_MESSAGES: false,
@@ -71,7 +74,7 @@ if (message.content.toLowerCase().startsWith(prefix + `close`)) {
 
     message.channel.send(`Are you sure? Once confirmed, you cannot reverse this action!\nTo confirm, type \`^confirm\`. This will time out in 10 seconds and be cancelled.`)
     .then((m) => {
-      message.channel.awaitMessages(response => response.content === '~confirm', {
+      message.channel.awaitMessages(response => response.content === '^confirm', {
         max: 1,
         time: 10000,
         errors: ['time'],
