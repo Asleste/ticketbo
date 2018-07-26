@@ -28,7 +28,7 @@ client.on("message", (message) => {
     const embed = new Discord.RichEmbed()
     .setTitle(`:tools: Brain/Out Ticket Help`)
     .setColor(0xCF40FA)
-    .setDescription(`I made this ticket support system for the #support and #bug_report Channels`)
+    .setDescription(`This bot is used for #support and #bug_report Channels`)
     .addField(`Tickets`, `[${prefix}**ticket**]() *Opens up a new ticket and tags the Brain/Out Team*\n[${prefix}**close**]() *Closes a ticket that has been resolved* `)
     message.channel.send({ embed: embed });
   }
@@ -49,9 +49,6 @@ if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
         c.overwritePermissions(role, {
             SEND_MESSAGES: true,
             READ_MESSAGES: true
-            MANAGE_MESSAGES * true
-            CREATE_INSTANT_INVITE true
-            MENTION_EVERYONE true
         });
         c.overwritePermissions(role2, {
             SEND_MESSAGES: false,
