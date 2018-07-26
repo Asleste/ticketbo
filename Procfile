@@ -1,1 +1,1 @@
-worker; node vx.js
+worker: node vx.js
