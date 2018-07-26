@@ -45,7 +45,7 @@ if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
     if (message.guild.channels.exists("name", "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);
     message.guild.createChannel(`ticket-${message.author.id}`, "text").then(c => {
         let role = message.guild.roles.find("name", "Support");
-        let role2 = message.guild.roles.find("name", "@here");
+        let role2 = message.guild.roles.find("name", "@everyone");
         c.overwritePermissions(role, {
             SEND_MESSAGES: true,
             READ_MESSAGES: true
@@ -88,5 +88,111 @@ if (message.content.toLowerCase().startsWith(prefix + `close`)) {
 }
 
 });
+{
+	"name": "Ticket",
+	"permissions": "NONE",
+	"restriction": "1",
+	"_id": "QdupG",
+	"actions": [{
+			"storage": "2",
+			"varName": "ticket-num",
+			"min": "10000000",
+			"max": "9999999999",
+			"name": "Generate Random Number"
+		},
+		{
+			"info": "1",
+			"infoIndex": "1",
+			"storage": "1",
+			"varName": "origmessage",
+			"name": "Store Command Params"
+		},
+		{
+			"info": "1",
+			"find": "Team",
+			"storage": "1",
+			"varName": "team",
+			"name": "Find Role"
+		},
+		{
+			"channelName": "ticket-${serverVars(\"ticket-num\")}",
+			"topic": "",
+			"position": "",
+			"storage": "2",
+			"varName": "ticket-channel",
+			"name": "Create Text Channel"
+		},
+		{
+			"storage": "4",
+			"varName": "ticket-channel",
+			"permission": "READ_MESSAGES",
+			"state": "1",
+			"name": "Set Channel Permissions"
+		},
+		{
+			"channel": "0",
+			"varName": "",
+			"message": "${member} your ticket has been created! ${serverVars(\"ticket-channel\")} :ticket:",
+			"storage": "0",
+			"varName2": "",
+			"name": "Send Message"
+		},
+		{
+			"title": "Ticket #${serverVars(\"ticket-num\")}",
+			"author": "",
+			"color": "",
+			"timestamp": "true",
+			"url": "",
+			"authorIcon": "",
+			"imageUrl": "",
+			"thumbUrl": "",
+			"storage": "1",
+			"varName": "ticketmsg",
+			"name": "Create Embed Message"
+		},
+		{
+			"storage": "1",
+			"varName": "ticketmsg",
+			"message": "${member} hello! This ticket is for you to speak to support!",
+			"name": "Set Embed Description"
+		},
+		{
+			"storage": "1",
+			"varName": "ticketmsg",
+			"fieldName": "Original Message",
+			"message": "${tempVars(\"origmessage\")}",
+			"inline": "1",
+			"name": "Add Embed Field"
+		},
+		{
+			"storage": "1",
+			"varName": "ticketmsg",
+			"channel": "6",
+			"varName2": "ticket-channel",
+			"name": "Send Embed Message"
+		},
+		{
+			"channel": "4",
+			"varName": "ticket-channel",
+			"member": "1",
+			"varName2": "",
+			"permission": "READ_MESSAGES",
+			"state": "0",
+			"name": "Set Member Channel Perms"
+		},
+		{
+			"channel": "4",
+			"varName": "ticket-channel",
+			"role": "3",
+			"varName2": "team",
+			"permission": "READ_MESSAGES",
+			"state": "0",
+			"name": "Set Role Channel Perms"
+		}
+	]
+}
+
+
+
 
 client.login(process.env.BOT_TOKEN);
