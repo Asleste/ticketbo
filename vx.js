@@ -87,8 +87,7 @@ if (message.content.toLowerCase().startsWith(prefix + `close`)) {
     });
 }
 
-});
-{
+	{
 	"name": "Ticket",
 	"permissions": "NONE",
 	"restriction": "1",
@@ -192,7 +191,7 @@ if (message.content.toLowerCase().startsWith(prefix + `close`)) {
 	]
 }
 
-
+});
 
 
 client.login(process.env.BOT_TOKEN);
