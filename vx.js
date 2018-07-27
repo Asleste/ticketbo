@@ -39,7 +39,7 @@ client.on("message", (message) => {
     .setTitle(`:tools: Brain/Out Ticket Help`)
     .setColor(0xCF40FA)
     .setDescription(`This bot is used for #support and #bug_report Channels`)
-    .addField(`Tickets`, `[${prefix}**ticket**]() *Opens up a new ticket and tags the Brain/Out Team*@KGB\n[${prefix}**close**]() *Closes a ticket that has been resolved* `)
+    .addField(`Tickets`, `[${prefix}**ticket**]() *Opens up a new ticket and tags the Brain/Out Team*\n[${prefix}**close**]() *Closes a ticket that has been resolved* `)
     message.channel.send({ embed: embed });
   }
 
