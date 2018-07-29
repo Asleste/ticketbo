@@ -22,13 +22,6 @@ client.on("ready", () => {
   client.user.setGame(`https://vk.com/brainoutgame`);
 });
 
-
-
-
-
-
-
-
 // Event listener for new members
 client.on('guildMemberAdd', member => {
     // Send the message to a designated channel on a server:
