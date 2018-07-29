@@ -1,105 +1,165 @@
-const Commando = require("discord.js");
-const bot = new Commando.Client();
+//Package
+const Discord = require('discord.js');
+const client = new Discord.Client();
+// Constant Variables
+const prefix = '_';
+const ownerID = '353253343956828162';
 
-function clean(text) {
-    if (typeof(text) === "string")
-      return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-    else
-        return text;
-}
-
-var prefix = "^";
-var token = " ";
-
-client.on("ready", () => {
-  console.log("B/O Ticket System | Logged in! Server count: ${client.guilds.size}");
-  client.user.setGame(`https://vk.com/brainoutgame`);
-});
-
-// Event listener for new members
-client.on('guildMemberAdd', member => {
-    // Send the message to a designated channel on a server:
-    const channel = member.guild.channels.find('name', 'general');
-    // Do nothing if the channel wasn't found on this server
-    if (!channel) return;
-    // Send the message, mentioning the member
-    channel.send(`Welcome to the server, ${member}`);
-});
-
-client.on("guildCreate", (guild) => {
-client.user.setGame(``);
-    guild.owner.user.send(`Thanks for Using my Bot!`);
-});
-
-client.on("message", (message) => {
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-  if (message.content.toLowerCase().startsWith(prefix + `help`)) {
-    const embed = new Discord.RichEmbed()
-    .setTitle(`:tools: Brain/Out Ticket Help`)
-    .setColor(0xCF40FA)
-    .setDescription(`This bot is used for #support and #bug_report Channels`)
-    .addField(`Tickets`, `[${prefix}**ticket**]() *Opens up a new ticket and tags the Brain/Out Team*\n[${prefix}**close**]() *Closes a ticket that has been resolved* `)
-    message.channel.send({ embed: embed });
-  }
-
-  if (message.content.toLowerCase().startsWith(prefix + `ping`)) {
-    message.channel.send(`Hoold on!`).then(m => {
-    m.edit(`:ping_pong: Wew, made it over the ~waves~ ! **Pong!**\nMessage edit time is ` + (m.createdTimestamp - message.createdTimestamp) + `ms, Client ` + Math.round(client.ping) + `ms.`);
-    });
-}
-
-if (message.content.toLowerCase().startsWith(prefix + `ticket`)) {
-    const reason = message.content.split(" ").slice(1).join(" ");
-    if (!message.guild.roles.exists("name", "Support")) return message.channel.send(`This server doesn't have a \`Support\` role made, so the ticket won't be opened.\nIf you are an administrator, make one with that name exactly and give it to users that should be able to see tickets.`);
-    if (message.guild.channels.exists("name", "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);
-    message.guild.createChannel(`ticket-${message.author.id}`, "text").then(c => {
-
-        let role = message.guild.roles.find("name", "Support");
-        let role2 = message.guild.roles.find("name", "@everyone");
-        c.overwritePermissions(role, {
-            SEND_MESSAGES: true,
-            READ_MESSAGES: true
-        });
-        c.overwritePermissions(role2, {
-            SEND_MESSAGES: false,
-            READ_MESSAGES: false
-        });
-        c.overwritePermissions(message.author, {
-            SEND_MESSAGES: true,
-            READ_MESSAGES: true
-        });
-        message.channel.send(`:white_check_mark: Your ticket has been created, #${c.name}.`);
-        const embed = new Discord.RichEmbed()
-        .setColor(0xCF40FA)
-        .addField(`Hey ${message.author.username}!`, `Please try explain why you opened this ticket with as much detail as possible. Our **Brain/Out Team** will be here soon to help.`)
-        .setTimestamp();
-        c.send({ embed: embed });
-    }).catch(console.error);
-}
-if (message.content.toLowerCase().startsWith(prefix + `close`)) {
-    if (!message.channel.name.startsWith(`ticket-`)) return message.channel.send(`You can't use the close command outside of a ticket channel.`);
-
-    message.channel.send(`Are you sure? Once confirmed, you cannot reverse this action!\nTo confirm, type \`^confirm\`. This will time out in 10 seconds and be cancelled.`)
-    .then((m) => {
-      message.channel.awaitMessages(response => response.content === '^confirm', {
-        max: 1,
-        time: 10000,
-        errors: ['time'],
-      })
-      .then((collected) => {
-          message.channel.delete();
-        })
-        .catch(() => {
-          m.edit('Ticket close timed out, the ticket was not closed.').then(m2 => {
-              m2.delete();
-          }, 3000);
-        });
-    });
-}
+// quickdb
+const db = require('quick.db');
 
 
-});
+// Listener Events
+client.on('message', async message => {
+
+  if (message.author.bot) return;
+  //Check if is in the dm channel
+  if (message.channel.type !=='text') {
+
+     let active = await db.fetch(`support_${message.author.id}`);
+
+     let guild = client.guilds.get('guildID');
+     // Two variables
+     let channel, found = true;
+     // This check if the support channel is create
+     try {
+         if (active) client.channels.get(activate.channelID).guild;
+
+     } catch (e){
+        found = false;
+     }
+       if (!activate || !found) {
+        active = {};
+        //create the channel
+        channel = await guild.channels.create(`${message.author.username}-${message.author.discriminator}`,{
+                parent: '', //
+                topic: `?complete to close the ticket | Support for ${message.author.tag} | ID: ${message.author.id}`
+         });
+
+            let author = message.author;
+
+           const newChannel = new Discord.MessageEmbed()
+              .setColor(0x36393e)
+              .setAuthor(author.tag, author.displayAvatarURL())
+              .setFooter('Support Ticket Created')
+              .setField('User', author)
+              .addField('ID', author.id)
+
+            //Send the message to the new channel
+            await channel.send(newChannel);
+            //New embed to the user to confirm the ticker
+            const newTicket = new Discord.MessageEmbed()
+              .setColor(0x36393e)
+              .setAuthor(`Hello, ${author.tag}`,author.displayAvatarURL())
+              .setFooter('Support Ticket Created')
+
+              // Send embed
+            await author.send(newTicket);
+            //Update Active Data
+            active.channelID = channel.id;
+            active.targetID = author.id;
+        }
+
+          channel = client.channels.get(active.channelID);
+          //dm embed
+          const dm = new Discord.MessageEmbed()
+          .setColor(0x36393e)
+          .setAuthor(`Thank you, ${message.author.tag}`,message.author.displayAvatarURL())
+          .setFooter(`Your message has been sent -- A staff member will be in contact soon`)
+
+           // Send Embed
+          await message.author.send(dm);
+
+          // Create the embed for the ticket channel
+          const embed = Disocord.MessageEmbed()
+               .setColor(0x36393e)
+               .setAuthor(message.author.tag, message.author.displayAvatarURL())
+               .setDescription(message.content)
+               .setFooter(`Message Recieved -- ${message.author.tag}`)
+
+           // Send Embed
+           await channel.send(embed);
+
+           // Update Data & Return
+           db.set(`support_${message.author.id}`, active);
+           db.set(`supportChannel_${channel.id}`, message.author.id);
+           return;
+
+    }
+
+      // Fetch Support Object
+      let support = await db.fetch(`supportChannel_${message.channel.id}`);
+
+      if (support) {
+        //update the support object
+         support = await db.fetch(`support_${support}`);
+         // Check if the user is still in the server
+         let supportUser = client.users.get(support.targetID);
+         if (!supportUser) return message.channel.delete();
+         //command
+        if(message.content.toLowerCase() == '?complete') {
+
+          const complete = new Discord.MessageEmbed()
+                .setColor(0x36393e)
+                .setAuthor(`Hey, ${supportUser.tag}`, supportUser.displayAvatarURL())
+                .setFooter('Ticket Closed -- Brain/Out Support')
+                .setDescription('*Your ticket has been marked as **complete**. If you wish to reopen this, or create a new one, please send a message to the bot.*')
+
+            supportUser.send(complete);
+            message.channel.delete();
+            db.delete(`support_${support.targetID}`);
+         }
+          const embed = new Discord.MessageEmbed()
+                .setColor(0x36393e)
+                .setAuthor(message.author.tag, message.author.displayAvatarURL())
+                .setFooter(`Message Recieved -- Brain/Out Support`)
+                .setDescription(message.content)
+
+            //send to users DM
+           client.users.get(support.targetID).send(embed)
+
+            message.delet({timeout: 1000});
+
+           //send it to the support channel
+           embed.setFooter(`Message Sent -- ${supportUser.tag}`).setDescription(message.content);
+
+           // Send & Return
+           return message.channel.send(embed);
 
 
+       }
+
+
+
+
+
+
+
+   // Variables
+    let args = message.content.slice(prefix.length).trim().split(' ');
+    let cmd = args.shift().toLowerCase();
+
+    // Return Staments
+    if (message.author.bot) return; // Ignore all bots
+    if (!message.content.startsWith(prefix)) return; // Return if the message doesnt start with the prefix
+
+    // Command Handler
+    try {
+
+    // Options
+    let ops = {
+        ownerID: ownerID
+    }
+
+
+    let commandFile = require(`./commands/${cmd}.js`); // This require a file in the commands folder
+    commandFile.run(client, message, args, ops);
+
+	} catch (e){
+       console.log(e.stack);
+    }
+
+
+	});
+// Discord Login
 client.login(process.env.BOT_TOKEN);
