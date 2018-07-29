@@ -1,11 +1,5 @@
-const Commando = require("discord.js-commando");
+const Commando = require("discord.js");
 const bot = new Commando.Client();
-
-bot.registry.registerGroup('snipers', 'Snipers');
-bot.registry.registerDefaults();
-bot.registry.registerCommandsIn(__dirname + '/commands');
-
-
 
 function clean(text) {
     if (typeof(text) === "string")
