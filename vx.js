@@ -35,7 +35,6 @@ client.on('message', async message => {
                 parent: '', //
                 topic: `?complete to close the ticket | Support for ${message.author.tag} | ID: ${message.author.id}`
          });
-
             let author = message.author;
 
            const newChannel = new Discord.MessageEmbed()
